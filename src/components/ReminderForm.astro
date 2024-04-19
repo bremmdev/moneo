@@ -1,0 +1,23 @@
+---
+
+---
+
+<form
+  hx-post="http://localhost:7071/api/orchestrators/durableReminderOrchestrator"
+  hx-ext="json-enc"
+>
+  <input type="text" name="name" placeholder="Name" />
+  <input type="text" name="description" placeholder="Description" />
+  <input
+    type="number"
+    name="expiration-time"
+    placeholder="Expiration time in seconds"
+  />
+  <select name="reminder-time">
+    <option value="1">1 minute</option>
+    <option value="5">5 minutes</option>
+    <option value="15">15 minutes</option>
+    <option value="30">30 minutes</option>
+  </select>
+  <button>Submit</button>
+</form>
