@@ -3,8 +3,10 @@
 ---
 
 <form
-  hx-post="http://localhost:7071/api/orchestrators/durableReminderOrchestrator"
+  hx-post="/partials/reminder"
   hx-ext="json-enc"
+  hx-target="#reminders ul"
+  hx-swap="beforeend"
 >
   <input type="text" name="name" placeholder="Name" />
   <input type="text" name="description" placeholder="Description" />
