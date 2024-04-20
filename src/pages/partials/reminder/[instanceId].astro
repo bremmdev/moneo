@@ -15,11 +15,19 @@ try {
   );
 
   if (!res.ok) {
-    console.log(res.statusText);
+    switch (res.status) {
+      case 404:
+        return new Response("Instance not found", { status: 404 });
+      case 410:
+        return new Response("Instance already terminated", { status: 410 });
+      default:
+        break;
+    }
+
     return new Response("Could not terminate instance", { status: 500 });
   }
 
-  // await db.delete(Reminder).where(eq(Reminder.orchestrationId, instanceId as string));
+  await db.delete(Reminder).where(eq(Reminder.orchestrationId, instanceId as string));
 
   return new Response(null, { status: 200 });
 } catch (error) {
