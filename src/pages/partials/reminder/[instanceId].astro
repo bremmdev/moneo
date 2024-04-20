@@ -14,7 +14,8 @@ try {
   );
 
   if (!res.ok) {
-    throw new Error("Failed to terminate instance");
+    console.log(res.statusText)
+    return new Response("Could not terminate instance", { status: 500 });
   }
 
   await db.delete(Reminder).where(eq(Reminder.orchestrationId, instanceId));
@@ -22,6 +23,6 @@ try {
   return new Response(null, { status: 200 });
 } catch (error) {
   console.error(error);
-  return;
+  return new Response("Could not terminate instance", { status: 500 });
 }
 ---
