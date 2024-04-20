@@ -16,32 +16,32 @@ if (method === "POST") {
     startTime + parseInt(data.expirationTime as string) * 1000 * 60;
 
   //enrich data for the orchestrator
-  formData.append("startTime", startTime.toString());
-  formData.append("endTime", endTime.toString());
+  // formData.append("startTime", startTime.toString());
+  // formData.append("endTime", endTime.toString());
 
-  try {
-    const res = await fetch(orchestratorUrl, {
-      method: "POST",
-      body: formData,
-    });
-    const orchestrationData = await res.json();
+  // try {
+  //   const res = await fetch(orchestratorUrl, {
+  //     method: "POST",
+  //     body: formData,
+  //   });
+  //   const orchestrationData = await res.json();
 
-    const reminderData = {
-      name: data.name as string,
-      description: data.description as string,
-      expirationTime: parseInt(data.expirationTime as string),
-      reminderTime: parseInt(data.reminderTime as string),
-      startTime,
-      endTime,
-      orchestrationId: orchestrationData.id as string,
-    };
+  //   const reminderData = {
+  //     name: data.name as string,
+  //     description: data.description as string,
+  //     expirationTime: parseInt(data.expirationTime as string),
+  //     reminderTime: parseInt(data.reminderTime as string),
+  //     startTime,
+  //     endTime,
+  //     orchestrationId: orchestrationData.id as string,
+  //   };
 
-    await db.insert(Reminder).values(reminderData);
+  //   await db.insert(Reminder).values(reminderData);
 
     return Astro.redirect("/");
-  } catch (error) {
-    console.error(error);
-  }
+  // } catch (error) {
+  //   console.error(error);
+  // }
 }
 ---
 
