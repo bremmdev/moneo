@@ -36,7 +36,7 @@ if (method === "POST") {
       orchestrationId: orchestrationData.id as string,
     };
 
-  //   await db.insert(Reminder).values(reminderData);
+    await db.insert(Reminder).values(reminderData);
 
     return Astro.redirect("/");
   } catch (error) {
