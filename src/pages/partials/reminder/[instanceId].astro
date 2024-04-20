@@ -4,17 +4,18 @@ const instanceId = Astro.params.instanceId;
 
 const ACCESS_KEY = import.meta.env.ACCESS_KEY;
 const ORCHESTRATOR_TERMINATE_URL = import.meta.env.ORCHESTRATOR_TERMINATE_URL;
+const TASK_HUB = import.meta.env.TASK_HUB;
 
 try {
   const res = await fetch(
-    `${ORCHESTRATOR_TERMINATE_URL}${instanceId}/terminate?taskHub=TestHubName&connection=Storage&code=${ACCESS_KEY}`,
+    `${ORCHESTRATOR_TERMINATE_URL}${instanceId}/terminate?taskHub=${TASK_HUB}&connection=Storage&code=${ACCESS_KEY}`,
     {
       method: "POST",
     }
   );
 
   if (!res.ok) {
-    console.log(res.statusText)
+    console.log(res.statusText);
     return new Response("Could not terminate instance", { status: 500 });
   }
 
