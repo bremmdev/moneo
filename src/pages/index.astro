@@ -1,14 +1,71 @@
 ---
+import { db, Reminder } from "astro:db";
 import Layout from "@layouts/Layout.astro";
-import ReminderForm from "@components/ReminderForm.astro";
+import AddIcon from "@assets/icons/add.svg";
+import { Image } from "astro:assets";
+import BellIcon from "@assets/icons/bell.svg";
+import ClockIcon from "@assets/icons/clock.svg";
+import { formatTime } from "@utils/time";
+
+const reminders = await db.select().from(Reminder).orderBy(Reminder.endTime);
 ---
 
-<Layout
-  ><h1>Moneo</h1>
-
-  <ReminderForm />
+<Layout>
   <section id="reminders">
-    <h2>Reminders</h2>
-    <ul></ul>
+    <header
+      class="flex justify-center flex-col lg:flex-row items-center relative"
+    >
+      <h2
+        class="text-center text-3xl font-bold tracking-tighter text-sky-300 md:text-5xl"
+      >
+        Active Reminders
+      </h2>
+      <a
+        href="/reminder/new"
+        class="lg:absolute lg:right-0 translate-y-1 w-fit focus-visible:ring-ring ring-offset-amber-300 ring-amber-300 my-4 inline-flex items-center justify-center rounded-md bg-sky-300 px-4 py-2 text-sm font-medium text-slate-900 transition-colors hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50"
+        >Create Reminder<Image
+          src={AddIcon}
+          alt="Add Icon"
+          class="w-5 h-5 ml-1"
+        /></a
+      >
+    </header>
+
+    <ul class="flex flex-col gap-4 my-8 lg:my-12 text-sm text-slate-300">
+      {
+        reminders.map((r) => (
+          <li class="flex justify-between items-center gap-4 border border-slate-700 p-4 rounded-lg">
+            <div class="flex flex-col gap-2">
+              <div class="flex gap-4 bg-slate-900/90 -translate-x-2 p-2 font-bold">
+                <span class="flex gap-2 items-center">
+                  <Image
+                    src={ClockIcon}
+                    alt="Bell Icon"
+                    class="mt-[2px] w-4 h-4"
+                  />
+                  {formatTime(new Date(r.endTime))}
+                </span>
+              </div>
+              <h3 class="text-sky-300 font-bold">{r.name}</h3>
+              <p>{r.description}</p>
+              <span class="flex gap-2 items-center">
+                <Image src={BellIcon} alt="Bell Icon" class="w-4 h-4" />
+                {r.reminderTime} {r.reminderTime === 1 ? "minute" : "minutes"}
+                before
+              </span>
+            </div>
+
+            <button
+              hx-delete={`/partials/reminder/${r.orchestrationId}`}
+              hx-target="closest li"
+              hx-swap="delete"
+              class="w-fit items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-amber-300 text-slate-950 hover:bg-amber-400/90 h-10 px-4 py-2 flex gap-2"
+            >
+              Finish Task
+            </button>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 </Layout>

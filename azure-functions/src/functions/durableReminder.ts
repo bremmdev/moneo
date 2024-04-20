@@ -19,7 +19,8 @@ type ReminderData = {
   description: string;
   expirationTime: string;
   reminderTime: string;
-  startTime: number;
+  startTime: string;
+  endTime: string;
 };
 
 const activityName = "durableReminder";
@@ -34,9 +35,11 @@ const durableReminderOrchestrator: OrchestrationHandler = function* (
   //calculate the time to wait before sending the reminder
   //startTime + (expirationTime - reminderTime)
   const remindDate = new Date(
-    reminderData.startTime +
-      (parseInt(reminderData.expirationTime) * 1000 -
-        parseInt(reminderData.reminderTime) * 1000 * 60)
+    parseInt(reminderData.startTime) +
+      (parseInt(reminderData.expirationTime as string) -
+        parseInt(reminderData.reminderTime as string)) *
+        1000 *
+        60
   );
 
   //create a timer to wait until the reminder time
@@ -55,15 +58,13 @@ df.app.orchestration(
 const durableReminder: ActivityHandler = (
   reminderData: ReminderData
 ): string => {
-  const expirationDate = new Date(
-    reminderData.startTime + parseInt(reminderData.expirationTime) * 1000
-  );
+  const endDate = new Date(parseInt(reminderData.endTime));
 
   const mailOptions = {
     subject: `Moneo Reminder: ${reminderData.name}`,
     html: `<h1>Reminder for ${reminderData.name}</h1>
             <p>Description: ${reminderData.description}<p>
-            <p>Expires at: ${formatExpireDate(expirationDate)}</p>`,
+            <p>Expires at: ${formatExpireDate(endDate)}</p>`,
     ...baseMailOptions,
   };
 
@@ -89,13 +90,8 @@ const durableReminderHttpStart: HttpHandler = async (
 
   //Parse the incoming request body
   const formData = await request.formData();
-  const reminderData = {
-    name: formData.get("name"),
-    description: formData.get("description"),
-    expirationTime: formData.get("expiration-time"),
-    reminderTime: formData.get("reminder-time"),
-    startTime: new Date().getTime(),
-  };
+  const reminderData = Object.fromEntries(formData);
+
 
   const instanceId: string = await client.startNew(
     request.params.orchestratorName,

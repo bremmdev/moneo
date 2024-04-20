@@ -1,0 +1,50 @@
+---
+import { db, Reminder } from "astro:db";
+import Layout from "@layouts/Layout.astro";
+import ReminderForm from "@components/ReminderForm.astro";
+
+const method = Astro.request.method;
+const orchestratorUrl = import.meta.env.ORCHESTRATOR_URL;
+
+if (method === "POST") {
+  const formData = await Astro.request.formData();
+
+  const data = Object.fromEntries(formData.entries());
+
+  const startTime = new Date().getTime();
+  const endTime =
+    startTime + parseInt(data.expirationTime as string) * 1000 * 60;
+
+  //enrich data for the orchestrator
+  formData.append("startTime", startTime.toString());
+  formData.append("endTime", endTime.toString());
+
+  try {
+    const res = await fetch(orchestratorUrl, {
+      method: "POST",
+      body: formData,
+    });
+    const orchestrationData = await res.json();
+
+    const reminderData = {
+      name: data.name as string,
+      description: data.description as string,
+      expirationTime: parseInt(data.expirationTime as string),
+      reminderTime: parseInt(data.reminderTime as string),
+      startTime,
+      endTime,
+      orchestrationId: orchestrationData.id as string,
+    };
+
+    console.log(data);
+
+    await db.insert(Reminder).values(reminderData);
+
+    return Astro.redirect("/");
+  } catch (error) {
+    console.error(error);
+  }
+}
+---
+
+<Layout><ReminderForm /></Layout>

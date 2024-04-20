@@ -1,4 +1,5 @@
 ---
+import { db, Reminder, eq } from "astro:db";
 const instanceId = Astro.params.instanceId;
 
 const ACCESS_KEY = import.meta.env.ACCESS_KEY;
@@ -14,6 +15,8 @@ try {
   if (!res.ok) {
     throw new Error("Failed to terminate instance");
   }
+
+  await db.delete(Reminder).where(eq(Reminder.orchestrationId, instanceId));
 
   return new Response(null, { status: 200 });
 } catch (error) {

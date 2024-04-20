@@ -1,25 +1,56 @@
 ---
-
 ---
 
 <form
-  hx-post="/partials/reminder"
+  hx-post="/reminder/new"
   hx-ext="json-enc"
-  hx-target="#reminders ul"
-  hx-swap="beforeend"
+  class="flex flex-col gap-4 mx-auto max-w-2xl"
+  hx-target="body"
+  hx-push-url="true"
 >
-  <input type="text" name="name" placeholder="Name" />
-  <input type="text" name="description" placeholder="Description" />
+  <label for="name" class="mb-1 font-bold text-slate-300"> Task name </label>
   <input
-    type="number"
-    name="expiration-time"
-    placeholder="Expiration time in seconds"
+    type="text"
+    id="name"
+    class="w-full rounded-md border border-slate-800 bg-inherit px-4 py-2 placeholder:opacity-50 focus:border-sky-300 focus:outline-none"
+    name="name"
+    placeholder="Name of the task"
   />
-  <select name="reminder-time">
-    <option value="1">1 minute</option>
-    <option value="5">5 minutes</option>
-    <option value="15">15 minutes</option>
-    <option value="30">30 minutes</option>
+  <label for="description" class="mb-1 font-bold text-slate-300">
+    Description
+  </label>
+  <input
+    type="text"
+    id="description"
+    class="w-full rounded-md border border-slate-800 bg-inherit px-4 py-2 placeholder:opacity-50 focus:border-sky-300 focus:outline-none"
+    name="description"
+    placeholder="Description"
+  />
+  <label for="expiration-time" class="mb-1 font-bold text-slate-300">
+    Expiration time
+  </label>
+  <input
+    class="w-full rounded-md border border-slate-800 bg-inherit px-4 py-2 placeholder:opacity-50 focus:border-sky-300 focus:outline-none"
+    type="number"
+    name="expirationTime"
+    id="expiration-time"
+    placeholder="Task expires in (minutes)"
+  />
+  <label for="reminder-time" class="mb-1 font-bold text-slate-300">
+    Reminder before expiration
+  </label>
+  <select
+    name="reminderTime"
+    id="reminder-time"
+    class="w-full rounded-md border border-slate-800 bg-inherit px-4 py-2 placeholder:opacity-50 focus:border-sky-300 focus:outline-none text-slate-50 bg-slate-950"
+  >
+    <option class="bg-slate-950" value="1">1 minute</option>
+    <option class="bg-slate-950" value="5">5 minutes</option>
+    <option class="bg-slate-950" value="15">15 minutes</option>
+    <option class="bg-slate-950" value="30">30 minutes</option>
   </select>
-  <button>Submit</button>
+  <button
+    class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-amber-300 text-slate-950 hover:bg-amber-400/90 h-10 px-4 py-2 flex gap-2 w-full md:w-fit my-4 mx-auto"
+    >Add Reminder</button
+  >
 </form>
