@@ -8,7 +8,7 @@ const orchestratorUrl = import.meta.env.ORCHESTRATOR_URL;
 
 if (method === "POST") {
   const formData = await Astro.request.formData();
-
+  
   const data = Object.fromEntries(formData.entries());
 
   const startTime = new Date().getTime();
@@ -35,8 +35,6 @@ if (method === "POST") {
       endTime,
       orchestrationId: orchestrationData.id as string,
     };
-
-    console.log(data);
 
     await db.insert(Reminder).values(reminderData);
 
