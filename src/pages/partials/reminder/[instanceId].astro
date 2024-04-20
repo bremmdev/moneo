@@ -19,7 +19,7 @@ try {
     return new Response("Could not terminate instance", { status: 500 });
   }
 
-  await db.delete(Reminder).where(eq(Reminder.orchestrationId, instanceId));
+  // await db.delete(Reminder).where(eq(Reminder.orchestrationId, instanceId as string));
 
   return new Response(null, { status: 200 });
 } catch (error) {
