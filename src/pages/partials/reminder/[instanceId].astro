@@ -3,10 +3,11 @@ import { db, Reminder, eq } from "astro:db";
 const instanceId = Astro.params.instanceId;
 
 const ACCESS_KEY = import.meta.env.ACCESS_KEY;
+const ORCHESTRATOR_TERMINATE_URL = import.meta.env.ORCHESTRATOR_TERMINATE_URL;
 
 try {
   const res = await fetch(
-    `http://localhost:7071/runtime/webhooks/durabletask/instances/${instanceId}/terminate?taskHub=TestHubName&connection=Storage&code=${ACCESS_KEY}`,
+    `${ORCHESTRATOR_TERMINATE_URL}${instanceId}/terminate?taskHub=TestHubName&connection=Storage&code=${ACCESS_KEY}`,
     {
       method: "POST",
     }
