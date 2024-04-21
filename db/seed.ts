@@ -4,22 +4,22 @@ import { db, Reminder } from "astro:db";
 export default async function seed() {
   const mockReminders = [
     {
+      orchestrationId: "1",
       name: "Reminder 1",
       description: "Description 1",
-      startTime: Date.now(),
-      endTime: Date.now() + 1000 * 60 * 60 * 24,
-      expirationTime: Date.now() + 1000 * 60 * 60 * 24,
+      startDate: new Date(Date.now()),
+      endDate: new Date(Date.now() + 1000 * 60 * 10),
+      expirationTime: 10,
       reminderTime: 15,
-      orchestrationId: "1",
     },
     {
+      orchestrationId: "2",
       name: "Reminder 2",
       description: "Description 2",
-      startTime: Date.now(),
-      endTime: Date.now() + 1000 * 60 * 60 * 24,
-      expirationTime: Date.now() + 1000 * 60 * 60 * 24,
+      startDate: new Date(Date.now()),
+      endDate: new Date(Date.now() + 1000 * 60 * 10),
+      expirationTime: 10,
       reminderTime: 1,
-      orchestrationId: "2",
     },
   ];
 

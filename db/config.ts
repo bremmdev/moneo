@@ -2,13 +2,13 @@ import { defineDb, defineTable, column } from "astro:db";
 
 const Reminder = defineTable({
   columns: {
+    orchestrationId: column.text(),
     name: column.text(),
     description: column.text(),
-    startTime: column.number(),
-    endTime: column.number(),
+    startDate: column.date(),
+    endDate: column.date(),
     expirationTime: column.number(),
     reminderTime: column.number(),
-    orchestrationId: column.text(),
   },
 });
 

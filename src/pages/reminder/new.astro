@@ -8,16 +8,17 @@ const orchestratorUrl = import.meta.env.ORCHESTRATOR_URL;
 
 if (method === "POST") {
   const formData = await Astro.request.formData();
-  
+
   const data = Object.fromEntries(formData.entries());
 
-  const startTime = new Date().getTime();
-  const endTime =
-    startTime + parseInt(data.expirationTime as string) * 1000 * 60;
+  const startDate = new Date();
+  const endDate = new Date(
+    startDate.getTime() + parseInt(data.expirationTime as string) * 1000 * 60
+  );
 
   // enrich data for the orchestrator
-  formData.append("startTime", startTime.toString());
-  formData.append("endTime", endTime.toString());
+  formData.append("startDate", startDate.toString());
+  formData.append("endDate", endDate.toString());
 
   try {
     const res = await fetch(orchestratorUrl, {
@@ -27,13 +28,13 @@ if (method === "POST") {
     const orchestrationData = await res.json();
 
     const reminderData = {
+      orchestrationId: orchestrationData.id as string,
       name: data.name as string,
       description: data.description as string,
       expirationTime: parseInt(data.expirationTime as string),
       reminderTime: parseInt(data.reminderTime as string),
-      startTime,
-      endTime,
-      orchestrationId: orchestrationData.id as string,
+      startDate,
+      endDate,
     };
 
     await db.insert(Reminder).values(reminderData);

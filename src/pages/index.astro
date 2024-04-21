@@ -7,7 +7,7 @@ import BellIcon from "@assets/icons/bell.svg";
 import ClockIcon from "@assets/icons/clock.svg";
 import { formatTime } from "@utils/time";
 
-const reminders = await db.select().from(Reminder).orderBy(Reminder.endTime);
+const reminders = await db.select().from(Reminder).orderBy(Reminder.endDate);
 ---
 
 <Layout>
@@ -43,7 +43,7 @@ const reminders = await db.select().from(Reminder).orderBy(Reminder.endTime);
                     alt="Bell Icon"
                     class="mt-[2px] w-4 h-4"
                   />
-                  {formatTime(new Date(r.endTime))}
+                  {formatTime(r.endDate)}
                 </span>
               </div>
               <h3 class="text-sky-300 font-bold">{r.name}</h3>
