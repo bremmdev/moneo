@@ -7,5 +7,6 @@ export function formatTime(date: Date): string {
     minute: "2-digit",
     second: "2-digit",
     hour12: false, // Using 24-hour format
+    timeZone: "Europe/Amsterdam"
   });
 }
