@@ -5,6 +5,13 @@ import ExpiredReminders from "@components/ExpiredReminders.astro";
 ---
 
 <Layout>
-  <ActiveReminders />
-  <ExpiredReminders />
+  <div
+    id="reminders-container"
+    hx-get="/reminder/refresh"
+    hx-trigger="every 60s"
+    hx-swap="outerHTML transition:true"
+  >
+    <ActiveReminders />
+    <ExpiredReminders />
+  </div>
 </Layout>

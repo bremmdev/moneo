@@ -1,0 +1,15 @@
+---
+export const partial = true;
+import ActiveReminders from "@components/ActiveReminders.astro";
+import ExpiredReminders from "@components/ExpiredReminders.astro";
+---
+
+<div
+  id="reminders-container"
+  hx-get="/reminder/refresh"
+  hx-trigger="every 60s"
+  hx-swap="outerHTML transition:true"
+>
+  <ActiveReminders />
+  <ExpiredReminders />
+</div>

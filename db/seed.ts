@@ -8,9 +8,9 @@ export default async function seed() {
       name: "Reminder 1",
       description: "Description 1",
       startDate: new Date(Date.now()),
-      endDate: new Date(Date.now() + 1000 * 60 * 10),
-      expirationTime: 10,
-      reminderTime: 15,
+      endDate: new Date(Date.now() + 1000 * 60 * 2),
+      expirationTime: 2,
+      reminderTime: 1,
     },
     {
       orchestrationId: "2",
