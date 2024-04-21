@@ -19,8 +19,8 @@ type ReminderData = {
   description: string;
   expirationTime: string;
   reminderTime: string;
-  startTime: string;
-  endTime: string;
+  startDate: string;
+  endDate: string;
 };
 
 const activityName = "durableReminder";
@@ -35,7 +35,7 @@ const durableReminderOrchestrator: OrchestrationHandler = function* (
   //calculate the time to wait before sending the reminder
   //startTime + (expirationTime - reminderTime)
   const remindDate = new Date(
-    parseInt(reminderData.startTime) +
+    new Date(reminderData.startDate).getTime() +
       (parseInt(reminderData.expirationTime as string) -
         parseInt(reminderData.reminderTime as string)) *
         1000 *
@@ -58,13 +58,13 @@ df.app.orchestration(
 const durableReminder: ActivityHandler = (
   reminderData: ReminderData
 ): string => {
-  const endDate = new Date(parseInt(reminderData.endTime));
-
   const mailOptions = {
     subject: `Moneo Reminder: ${reminderData.name}`,
     html: `<h1>Reminder for ${reminderData.name}</h1>
             <p>Description: ${reminderData.description}<p>
-            <p>Expires at: ${formatExpireDate(endDate)}</p>`,
+            <p>Expires at: ${formatExpireDate(
+              new Date(reminderData.endDate)
+            )}</p>`,
     ...baseMailOptions,
   };
 
@@ -91,7 +91,6 @@ const durableReminderHttpStart: HttpHandler = async (
   //Parse the incoming request body
   const formData = await request.formData();
   const reminderData = Object.fromEntries(formData);
-
 
   const instanceId: string = await client.startNew(
     request.params.orchestratorName,
