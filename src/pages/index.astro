@@ -1,36 +1,10 @@
 ---
-import { db, Reminder } from "astro:db";
 import Layout from "@layouts/Layout.astro";
-import AddIcon from "@assets/icons/add.svg";
-import { Image } from "astro:assets";
-import ReminderCard from "@components/ReminderCard.astro";
-
-const reminders = await db.select().from(Reminder).orderBy(Reminder.endDate);
+import ActiveReminders from "@components/ActiveReminders.astro";
+import ExpiredReminders from "@components/ExpiredReminders.astro";
 ---
 
 <Layout>
-  <section id="reminders">
-    <header
-      class="flex justify-center flex-col lg:flex-row items-center relative"
-    >
-      <h2
-        class="text-center text-3xl font-bold tracking-tighter text-sky-300 md:text-5xl"
-      >
-        Active Reminders
-      </h2>
-      <a
-        href="/reminder/new"
-        class="lg:absolute lg:right-0 translate-y-1 w-fit focus-visible:ring-ring ring-offset-amber-300 ring-amber-300 my-4 inline-flex items-center justify-center rounded-md bg-sky-300 px-4 py-2 text-sm font-medium text-slate-900 transition-colors hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50"
-        >Create Reminder<Image
-          src={AddIcon}
-          alt="Add Icon"
-          class="w-5 h-5 ml-1"
-        /></a
-      >
-    </header>
-
-    <ul class="flex flex-wrap gap-4 my-8 lg:my-12 text-sm text-slate-300">
-      {reminders.map((r) => <ReminderCard reminder={r} />)}
-    </ul>
-  </section>
+  <ActiveReminders />
+  <ExpiredReminders />
 </Layout>

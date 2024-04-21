@@ -1,0 +1,38 @@
+---
+import { db, Reminder, lte } from "astro:db";
+import ReminderCard from "@components/ReminderCard.astro";
+
+const reminders = await db
+  .select()
+  .from(Reminder)
+  .where(lte(Reminder.endDate, new Date()))
+  .orderBy(Reminder.endDate);
+---
+
+<section id="expired-reminders">
+  <header
+    class="flex justify-center flex-col lg:flex-row items-center relative"
+  >
+    <h2
+      class="text-center text-3xl font-bold tracking-tighter text-sky-300 md:text-5xl"
+    >
+      Expired Reminders
+    </h2>
+  </header>
+
+  {
+    reminders.length === 0 && (
+      <p class="text-center my-8 text-base">There are no expired reminders.</p>
+    )
+  }
+
+  {
+    reminders.length > 0 && (
+      <ul class="flex flex-wrap gap-4 my-8 lg:my-12 text-sm text-slate-300">
+        {reminders.map((r) => (
+          <ReminderCard reminder={r} />
+        ))}
+      </ul>
+    )
+  }
+</section>
