@@ -1,0 +1,58 @@
+---
+import { Reminder } from "astro:db";
+import BellIcon from "@assets/icons/bell.svg";
+import ClockIcon from "@assets/icons/clock.svg";
+import { formatTime } from "@utils/time";
+import { Image } from "astro:assets";
+
+type Props = {
+  reminder: typeof Reminder.$inferSelect;
+};
+
+const { reminder } = Astro.props;
+---
+
+<style>
+  @media (min-width: 760px) {
+    li {
+      max-width: calc(50% - 0.5rem);
+    }
+  }
+  @media (min-width: 1280px) {
+    li {
+      max-width: calc(33.33% - 0.67rem);
+    }
+  }
+</style>
+
+<li
+  class="flex w-full flex-col justify-between gap-4 border border-slate-700 p-4 rounded-lg"
+>
+  <div class="flex flex-col gap-2">
+    <div
+      class="flex gap-4 items-center bg-slate-900/90 -translate-x-2 p-2 font-bold w-fit"
+    >
+      <span class="flex gap-2 items-center">
+        <Image src={ClockIcon} alt="Bell Icon" class="mt-[2px] w-4 h-4" />
+        {formatTime(reminder.endDate)}
+      </span>
+    </div>
+    <h3 class="text-sky-300 font-bold">{reminder.name}</h3>
+    <p>{reminder.description}</p>
+    <span class="flex gap-2 items-center">
+      <Image src={BellIcon} alt="Bell Icon" class="w-4 h-4" />
+      {reminder.reminderTime}
+      {reminder.reminderTime === 1 ? "minute" : "minutes"}
+      before
+    </span>
+  </div>
+
+  <button
+    hx-delete={`/partials/reminder/${reminder.orchestrationId}`}
+    hx-target="closest li"
+    hx-swap="delete"
+    class="w-fit items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-amber-300 text-slate-950 hover:bg-amber-400/90 h-10 px-4 py-2 flex gap-2"
+  >
+    Finish Task
+  </button>
+</li>

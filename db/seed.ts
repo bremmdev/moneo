@@ -15,11 +15,21 @@ export default async function seed() {
     {
       orchestrationId: "2",
       name: "Reminder 2",
-      description: "Description 2",
+      description:
+        "This is quite a long description to showcase the capabilities of the reminder system. It can be as long as you want it to be.",
       startDate: new Date(Date.now()),
       endDate: new Date(Date.now() + 1000 * 60 * 10),
       expirationTime: 10,
       reminderTime: 1,
+    },
+    {
+      orchestrationId: "3",
+      name: "Reminder 3",
+      description: "Regular reminder with a short description.",
+      startDate: new Date(Date.now()),
+      endDate: new Date(Date.now() + 1000 * 60 * 15),
+      expirationTime: 15,
+      reminderTime: 5,
     },
   ];
 
