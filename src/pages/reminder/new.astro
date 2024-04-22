@@ -2,48 +2,81 @@
 import { db, Reminder } from "astro:db";
 import Layout from "@layouts/Layout.astro";
 import ReminderForm from "@components/ReminderForm.astro";
+import { validateInput, type FormSchema } from "@utils/validate";
 
 const method = Astro.request.method;
 const orchestratorUrl = import.meta.env.ORCHESTRATOR_URL;
+let formErrors: Record<string, string> = {};
+let formValues: FormSchema = {
+  name: "",
+  description: "",
+  expirationTime: "",
+  reminderTime: "",
+};
 
 if (method === "POST") {
   const formData = await Astro.request.formData();
 
-  const data = Object.fromEntries(formData.entries());
+  const result = validateInput(Object.fromEntries(formData.entries()));
 
-  const startDate = new Date();
-  const endDate = new Date(
-    startDate.getTime() + parseInt(data.expirationTime as string) * 1000 * 60
-  );
+  // if there are errors, populate the form with the values and errors, do not proceed
+  if (result.error) {
+    //create an object with a key for each path and a value of the error message
+    formErrors = result.error.issues.reduce(
+      (acc, issue) => {
+        if (issue.path.length === 1 && typeof issue.path[0] === "string") {
+          acc[issue.path[0]] = issue.message;
+        }
+        return acc;
+      },
+      {} as Record<string, string>
+    );
 
-  // enrich data for the orchestrator
-  formData.append("startDate", startDate.toString());
-  formData.append("endDate", endDate.toString());
-
-  try {
-    const res = await fetch(orchestratorUrl, {
-      method: "POST",
-      body: formData,
-    });
-    const orchestrationData = await res.json();
-
-    const reminderData = {
-      orchestrationId: orchestrationData.id as string,
-      name: data.name as string,
-      description: data.description as string,
-      expirationTime: parseInt(data.expirationTime as string),
-      reminderTime: parseInt(data.reminderTime as string),
-      startDate,
-      endDate,
+    formValues = {
+      name: formData.get("name") as string,
+      description: formData.get("description") as string,
+      expirationTime: formData.get("expirationTime") as string,
+      reminderTime: formData.get("reminderTime") as string,
     };
+  }
 
-    await db.insert(Reminder).values(reminderData);
+  // if there are no errors, proceed to the orchestrator and save the reminder
+  if (result.success) {
+    const { data } = result;
 
-    return Astro.redirect("/");
-  } catch (error) {
-    console.error(error);
+    const startDate = new Date();
+    const endDate = new Date(
+      startDate.getTime() + parseInt(data.expirationTime as string) * 1000 * 60
+    );
+
+    // enrich data for the orchestrator
+    formData.append("startDate", startDate.toString());
+    formData.append("endDate", endDate.toString());
+
+    try {
+      const res = await fetch(orchestratorUrl, {
+        method: "POST",
+        body: formData,
+      });
+      const orchestrationData = await res.json();
+
+      const reminderData = {
+        orchestrationId: orchestrationData.id as string,
+        name: data.name as string,
+        description: data.description as string,
+        expirationTime: parseInt(data.expirationTime as string),
+        reminderTime: parseInt(data.reminderTime as string),
+        startDate,
+        endDate,
+      };
+
+      await db.insert(Reminder).values(reminderData);
+      return Astro.redirect("/");
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 ---
 
-<Layout><ReminderForm /></Layout>
+<Layout><ReminderForm errors={formErrors} values={formValues} /></Layout>
