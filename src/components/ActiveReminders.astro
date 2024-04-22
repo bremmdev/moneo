@@ -41,7 +41,7 @@ const reminders = await db
     reminders.length > 0 && (
       <ul class="flex flex-wrap gap-4 my-8 lg:my-12 text-sm text-slate-300">
         {reminders.map((r) => (
-          <ReminderCard reminder={r} />
+          <ReminderCard reminder={r} expired={false} />
         ))}
       </ul>
     )

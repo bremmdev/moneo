@@ -7,9 +7,10 @@ import { Image } from "astro:assets";
 
 type Props = {
   reminder: typeof Reminder.$inferSelect;
+  expired: boolean;
 };
 
-const { reminder } = Astro.props;
+const { reminder, expired } = Astro.props;
 ---
 
 <style>
@@ -26,7 +27,7 @@ const { reminder } = Astro.props;
 </style>
 
 <li
-  class="flex w-full flex-col justify-between gap-4 border border-sky-300 p-4 rounded-lg bg-slate-900/50"
+  class={`flex w-full flex-col justify-between gap-4 border ${expired ? "border-rose-500" : "border-sky-300" } p-4 rounded-lg bg-slate-900/50`}
 >
   <div class="flex flex-col gap-2">
     <div
