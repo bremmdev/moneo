@@ -3,6 +3,8 @@ import { db, Reminder } from "astro:db";
 import Layout from "@layouts/Layout.astro";
 import ReminderForm from "@components/ReminderForm.astro";
 import { validateInput, type FormSchema } from "@utils/validate";
+import BackIcon from "@assets/icons/back.svg";
+import { Image } from "astro:assets";
 
 const method = Astro.request.method;
 const orchestratorUrl = import.meta.env.ORCHESTRATOR_URL;
@@ -79,4 +81,16 @@ if (method === "POST") {
 }
 ---
 
-<Layout><ReminderForm errors={formErrors} values={formValues} /></Layout>
+<Layout>
+  <a
+    href="/"
+    class="w-fit focus-visible:ring-ring ring-offset-amber-300 ring-amber-300 mb-2 sm:mb-0 inline-flex items-center justify-center rounded-md bg-sky-300 px-4 py-2 text-sm font-medium text-slate-900 transition-colors hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50"
+    ><Image src={BackIcon} alt="back icon" class="w-5 h-5 mr-1" />Back</a
+  >
+  <h2
+    class="text-center text-3xl font-bold tracking-tighter text-sky-300 md:text-5xl"
+  >
+    New Reminder
+  </h2>
+  <ReminderForm errors={formErrors} values={formValues} /></Layout
+>
