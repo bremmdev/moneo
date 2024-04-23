@@ -1,5 +1,7 @@
 ---
 import { type FormSchema, REMINDER_TIMES } from "@utils/validate";
+import Loader from "@assets/icons/loader.svg";
+import { Image } from "astro:assets";
 
 type Props = {
   errors: Record<string, string>;
@@ -9,11 +11,23 @@ type Props = {
 const { errors, values } = Astro.props;
 ---
 
+<style>
+  .spinner {
+    display: none;
+  }
+
+  .spinner.htmx-request {
+    display: inline-block;
+  }
+</style>
+
 <form
-  hx-post="/reminder/new"
   class="flex flex-col gap-4 mx-auto max-w-2xl my-8 lg:my-12"
+  hx-post="/reminder/new"
+  hx-indicator=".spinner"
   hx-target="body"
   hx-push-url="true"
+  hx-disabled-elt="button[type=submit]"
 >
   <label for="name" class="font-bold text-slate-300">Task name</label>
   <input
@@ -97,6 +111,11 @@ const { errors, values } = Astro.props;
   }
   <button
     class="items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-amber-300 text-slate-950 hover:bg-amber-400/90 h-10 px-4 py-2 flex gap-2 w-full md:w-fit my-4 mx-auto"
-    >Add Reminder</button
+    type="submit"
+    >Add Reminder <Image
+      src={Loader}
+      alt=""
+      class="htmx-indicator spinner animate-spin w-5 h-5"
+    /></button
   >
 </form>
