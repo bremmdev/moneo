@@ -13,21 +13,8 @@ type Props = {
 const { reminder, expired } = Astro.props;
 ---
 
-<style>
-  @media (min-width: 760px) {
-    li {
-      max-width: calc(50% - 0.5rem);
-    }
-  }
-  @media (min-width: 1280px) {
-    li {
-      max-width: calc(33.33% - 0.67rem);
-    }
-  }
-</style>
-
 <li
-  class={`flex w-full flex-col justify-between gap-4 border ${expired ? "border-rose-500" : "border-sky-300" } p-4 rounded-lg bg-slate-900/50`}
+  class={`flex w-full md:max-w-[calc(50%-0.5rem)] xl:max-w-[calc(33.33%-0.67rem)] flex-col justify-between gap-4 border ${expired ? "border-rose-500" : "border-sky-300"} p-4 rounded-lg bg-slate-900/50`}
 >
   <div class="flex flex-col gap-2">
     <div
