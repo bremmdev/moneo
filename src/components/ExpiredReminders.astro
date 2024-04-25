@@ -1,5 +1,5 @@
 ---
-import { db, Reminder, lte } from "astro:db";
+import { db, Reminder, lte, desc } from "astro:db";
 import ReminderCard from "@components/ReminderCard.astro";
 
 type Props = {
@@ -12,7 +12,7 @@ const baseQuery = db
   .select()
   .from(Reminder)
   .where(lte(Reminder.endDate, new Date()))
-  .orderBy(Reminder.endDate);
+  .orderBy(desc(Reminder.endDate));
 
 let reminders: Array<typeof Reminder.$inferSelect>;
 
