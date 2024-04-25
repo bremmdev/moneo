@@ -2,16 +2,17 @@
 import Layout from "@layouts/Layout.astro";
 import ActiveReminders from "@components/ActiveReminders.astro";
 import ExpiredReminders from "@components/ExpiredReminders.astro";
+import { REMINDER_LIMIT } from "@utils/constants";
 ---
 
 <Layout>
   <div
     id="reminders-container"
-    hx-get="/reminder/refresh"
+    hx-get=`/reminder/refresh?limit=${REMINDER_LIMIT}`
     hx-trigger="every 60s"
     hx-swap="outerHTML transition:true"
   >
-    <ActiveReminders />
-    <ExpiredReminders />
+    <ActiveReminders limit={REMINDER_LIMIT} />
+    <ExpiredReminders limit={REMINDER_LIMIT} />
   </div>
 </Layout>

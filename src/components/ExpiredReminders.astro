@@ -2,11 +2,25 @@
 import { db, Reminder, lte } from "astro:db";
 import ReminderCard from "@components/ReminderCard.astro";
 
-const reminders = await db
+type Props = {
+  limit?: number;
+};
+
+const { limit } = Astro.props;
+
+const baseQuery = db
   .select()
   .from(Reminder)
   .where(lte(Reminder.endDate, new Date()))
   .orderBy(Reminder.endDate);
+
+let reminders: Array<typeof Reminder.$inferSelect>;
+
+if (limit) {
+  reminders = await baseQuery.limit(limit);
+} else {
+  reminders = await baseQuery;
+}
 ---
 
 <section id="expired-reminders">

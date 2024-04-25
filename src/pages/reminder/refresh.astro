@@ -2,6 +2,9 @@
 export const partial = true;
 import ActiveReminders from "@components/ActiveReminders.astro";
 import ExpiredReminders from "@components/ExpiredReminders.astro";
+
+const limitParam = Astro.url.searchParams.get("limit");
+const limit = limitParam ? parseInt(limitParam) : undefined;
 ---
 
 <div
@@ -10,6 +13,6 @@ import ExpiredReminders from "@components/ExpiredReminders.astro";
   hx-trigger="every 60s"
   hx-swap="outerHTML transition:true"
 >
-  <ActiveReminders />
-  <ExpiredReminders />
+  <ActiveReminders limit={limit} />
+  <ExpiredReminders limit={limit} />
 </div>
