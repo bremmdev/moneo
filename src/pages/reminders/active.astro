@@ -1,0 +1,22 @@
+---
+import Layout from "@layouts/Layout.astro";
+import ActiveReminders from "@components/ActiveReminders.astro";
+import { Image } from "astro:assets";
+import BackIcon from "@assets/icons/back.svg";
+---
+
+<Layout>
+  <a
+  href="/"
+  class="w-fit focus-visible:ring-ring ring-offset-amber-300 ring-amber-300 mb-2 sm:mb-0 inline-flex items-center justify-center rounded-md bg-sky-300 px-4 py-2 text-sm font-medium text-slate-900 transition-colors hover:opacity-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50"
+  ><Image src={BackIcon} alt="back icon" class="w-5 h-5 mr-1" />Back Home</a
+>
+  <div
+    id="reminders-container"
+    hx-get=`/reminders/refresh?type=active`
+    hx-trigger="every 60s"
+    hx-swap="outerHTML transition:true"
+  >
+    <ActiveReminders />
+  </div>
+</Layout>

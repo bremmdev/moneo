@@ -8,7 +8,7 @@ import { REMINDER_LIMIT } from "@utils/constants";
 <Layout>
   <div
     id="reminders-container"
-    hx-get=`/reminder/refresh?limit=${REMINDER_LIMIT}`
+    hx-get=`/reminders/refresh?limit=${REMINDER_LIMIT}`
     hx-trigger="every 60s"
     hx-swap="outerHTML transition:true"
   >
