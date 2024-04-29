@@ -1,0 +1,28 @@
+---
+const currPath = Astro.url.pathname;
+---
+
+<nav class="mt-8 sm:mt-12 max-w-6xl mx-auto">
+  <ul
+    class="flex gap-4 mx-auto justify-center bg-slate-900/90 p-4 rounded-lg font-medium md:text-lg"
+  >
+    <li>
+      <a
+        href="/"
+        class={`${currPath === "/" ? "text-sky-300" : ""} hover:underline hover:underline-offset-4`}
+        >All</a>
+    </li>
+    <li>
+      <a
+        href="/reminders/active"
+        class={`${currPath === "/reminders/active" ? "text-sky-300" : ""} hover:underline hover:underline-offset-4`}
+        >Active</a>
+    </li>
+    <li>
+      <a
+        href="/reminders/expired"
+        class={`${currPath === "/reminders/expired" ? "text-sky-300" : ""} hover:underline hover:underline-offset-4`}
+        >Expired</a>
+    </li>
+  </ul>
+</nav>
