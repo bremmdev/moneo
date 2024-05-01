@@ -1,7 +1,6 @@
 ---
 import { db, Reminder, eq } from "astro:db";
 const referrerUrl = Astro.request.headers.get("Referer");
-console.log(referrerUrl)
 const instanceId = Astro.params.instanceId;
 
 //action can be either terminate (an active reminder) or complete (an expired reminder)
@@ -45,6 +44,7 @@ try {
     .set({ completed: true })
     .where(eq(Reminder.orchestrationId, instanceId));
 
+  //redirect back to where the request came from
   return Astro.redirect(referrerUrl);
 } catch (error) {
   console.error(error);
