@@ -1,5 +1,6 @@
 ---
-import { db, Reminder, lte, desc, and, eq } from "astro:db";
+import { db, Reminder, gt, and, eq } from "astro:db";
+
 import ReminderCard from "@components/ReminderCard.astro";
 
 type Props = {
@@ -11,8 +12,8 @@ const { limit } = Astro.props;
 const baseQuery = db
   .select()
   .from(Reminder)
-  .where(and(lte(Reminder.endDate, new Date()), eq(Reminder.completed, false)))
-  .orderBy(desc(Reminder.endDate));
+  .where(eq(Reminder.completed, true))
+  .orderBy(Reminder.endDate);
 
 let reminders: Array<typeof Reminder.$inferSelect>;
 
@@ -23,20 +24,19 @@ if (limit) {
 }
 ---
 
-<section id="expired-reminders">
+<section id="completed-reminders">
   <header
     class="flex justify-center flex-col lg:flex-row items-center relative"
   >
     <h2
       class="text-center text-3xl font-bold tracking-tighter text-sky-300 md:text-5xl"
     >
-      Expired Reminders
+      Completed Reminders
     </h2>
   </header>
-
   {
     reminders.length === 0 && (
-      <p class="text-center my-8 text-base">There are no expired reminders.</p>
+      <p class="text-center my-8 text-base">There are no completed reminders.</p>
     )
   }
 
@@ -44,7 +44,7 @@ if (limit) {
     reminders.length > 0 && (
       <ul class="flex flex-wrap gap-4 my-8 lg:my-12 text-sm text-slate-300">
         {reminders.map((r) => (
-          <ReminderCard reminder={r} status="expired" />
+          <ReminderCard reminder={r} status="completed" />
         ))}
       </ul>
     )

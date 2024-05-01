@@ -1,5 +1,5 @@
 ---
-import { db, Reminder, gt } from "astro:db";
+import { db, Reminder, gt, and, eq } from "astro:db";
 
 import AddIcon from "@assets/icons/add.svg";
 import { Image } from "astro:assets";
@@ -14,7 +14,7 @@ const { limit } = Astro.props;
 const baseQuery = db
   .select()
   .from(Reminder)
-  .where(gt(Reminder.endDate, new Date()))
+  .where(and(gt(Reminder.endDate, new Date()), eq(Reminder.completed, false)))
   .orderBy(Reminder.endDate);
 
 let reminders: Array<typeof Reminder.$inferSelect>;
@@ -55,7 +55,7 @@ if (limit) {
     reminders.length > 0 && (
       <ul class="flex flex-wrap gap-4 my-8 lg:my-12 text-sm text-slate-300">
         {reminders.map((r) => (
-          <ReminderCard reminder={r} expired={false} />
+          <ReminderCard reminder={r} status="active" />
         ))}
       </ul>
     )

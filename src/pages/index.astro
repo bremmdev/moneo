@@ -3,6 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import ActiveReminders from "@components/ActiveReminders.astro";
 import ExpiredReminders from "@components/ExpiredReminders.astro";
 import { REMINDER_LIMIT } from "@utils/constants";
+import CompletedReminders from "@components/CompletedReminders.astro";
 ---
 
 <Layout>
@@ -14,5 +15,6 @@ import { REMINDER_LIMIT } from "@utils/constants";
   >
     <ActiveReminders limit={REMINDER_LIMIT} />
     <ExpiredReminders limit={REMINDER_LIMIT} />
+    <CompletedReminders limit={REMINDER_LIMIT} />
   </div>
 </Layout>

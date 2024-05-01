@@ -1,35 +1,51 @@
 ---
 import { db, Reminder, eq } from "astro:db";
+const referrerUrl = Astro.request.headers.get("Referer");
+console.log(referrerUrl)
 const instanceId = Astro.params.instanceId;
+
+//action can be either terminate (an active reminder) or complete (an expired reminder)
+const action = Astro.url.searchParams.get("action");
 
 const ACCESS_KEY = import.meta.env.ACCESS_KEY;
 const ORCHESTRATOR_TERMINATE_URL = import.meta.env.ORCHESTRATOR_TERMINATE_URL;
 const TASK_HUB = import.meta.env.TASK_HUB;
 
+if (typeof instanceId === "undefined" || instanceId === null) {
+  return new Response("Instance ID is required", { status: 400 });
+}
+
 try {
-  const res = await fetch(
-    `${ORCHESTRATOR_TERMINATE_URL}${instanceId}/terminate?taskHub=${TASK_HUB}&connection=Storage&code=${ACCESS_KEY}`,
-    {
-      method: "POST",
-    }
-  );
+  //an active reminders needs to be terminated, skip this for expired reminders since they are already terminated
+  if (action === "terminate") {
+    const res = await fetch(
+      `${ORCHESTRATOR_TERMINATE_URL}${instanceId}/terminate?taskHub=${TASK_HUB}&connection=Storage&code=${ACCESS_KEY}`,
+      {
+        method: "POST",
+      }
+    );
 
-  if (!res.ok) {
-    switch (res.status) {
-      case 404:
-        return new Response("Instance not found", { status: 404 });
-      case 410:
-        return new Response("Instance already terminated", { status: 410 });
-      default:
-        break;
-    }
+    if (!res.ok) {
+      switch (res.status) {
+        case 404:
+          return new Response("Instance not found", { status: 404 });
+        case 410:
+          return new Response("Instance already terminated", { status: 410 });
+        default:
+          break;
+      }
 
-    return new Response("Could not terminate instance", { status: 500 });
+      return new Response("Could not terminate instance", { status: 500 });
+    }
   }
 
-  await db.delete(Reminder).where(eq(Reminder.orchestrationId, instanceId as string));
+  //set the reminder to completed
+  await db
+    .update(Reminder)
+    .set({ completed: true })
+    .where(eq(Reminder.orchestrationId, instanceId));
 
-  return new Response(null, { status: 200 });
+  return Astro.redirect(referrerUrl);
 } catch (error) {
   console.error(error);
   return new Response("Could not terminate instance", { status: 500 });

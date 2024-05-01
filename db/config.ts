@@ -5,6 +5,7 @@ const Reminder = defineTable({
     orchestrationId: column.text(),
     name: column.text(),
     description: column.text(),
+    completed: column.boolean({ default: false }),
     startDate: column.date(),
     endDate: column.date(),
     expirationTime: column.number(),

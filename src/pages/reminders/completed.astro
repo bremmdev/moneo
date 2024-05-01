@@ -1,0 +1,15 @@
+---
+import Layout from "@layouts/Layout.astro";
+import CompletedReminders from "@components/CompletedReminders.astro";
+---
+
+<Layout title="Moneo - Completed Reminders">
+  <div
+    id="reminders-container"
+    hx-get=`/reminders/refresh?type=completed`
+    hx-trigger="every 60s"
+    hx-swap="outerHTML transition:true"
+  >
+    <CompletedReminders />
+  </div>
+</Layout>

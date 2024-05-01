@@ -1,13 +1,16 @@
 ---
 export const partial = true;
 import ActiveReminders from "@components/ActiveReminders.astro";
+import CompletedReminders from "@components/CompletedReminders.astro";
 import ExpiredReminders from "@components/ExpiredReminders.astro";
 
 const limitParam = Astro.url.searchParams.get("limit");
 const type = Astro.url.searchParams.get("type");
 const limit = limitParam ? parseInt(limitParam) : undefined;
 
-if (type && type !== "active" && type !== "expired") {
+const allowedTypes = ["active", "expired", "completed"];
+
+if (type && !allowedTypes.includes(type)){
   return new Response("Invalid type", { status: 400 });
 }
 
@@ -25,4 +28,5 @@ if (limit) refreshParams.set("limit", limit.toString());
 >
   {(!type || type === "active") && <ActiveReminders limit={limit} />}
   {(!type || type === "expired") && <ExpiredReminders limit={limit} />}
+  {(!type || type === "completed") && <CompletedReminders limit={limit} />}
 </div>

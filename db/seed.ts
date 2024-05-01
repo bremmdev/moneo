@@ -40,6 +40,16 @@ export default async function seed() {
       expirationTime: 15,
       reminderTime: 5,
     },
+    {
+      orchestrationId: "5",
+      name: "Reminder 5",
+      description: "Completed reminder with a short description.",
+      completed: true,
+      startDate: new Date(Date.now()),
+      endDate: new Date(Date.now() + 1000 * 60 * 10),
+      expirationTime: 10,
+      reminderTime: 5,
+    },
   ];
 
   await db.insert(Reminder).values(mockReminders);
